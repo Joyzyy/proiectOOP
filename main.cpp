@@ -3,13 +3,25 @@
 
 #include "Eveniment.hpp"
 #include "Locatie.hpp"
+#include "eSportTickets.hpp"
 
 int main() {
-    Eveniment ev1("CS:GO", "2020-01-01", "12:00", "CS:GO Major", 100, 0, 100);
-    Eveniment ev2("Dota 2", "2020-01-01", "12:00", "Dota 2 Major", 100, 0, 100);
-    Eveniment ev3("League of Legends", "2020-01-01", "12:00", "League of Legends Major", 100, 0, 100, Locatie("WEEABO Bucuresti Romania Strada", 1, 1));
+    Eveniment ev2("LOL Championship", "Finala LOL", 250, Locatie("Arena Nationala", 10, 10));
 
-    std::cout << ev1 << std::endl;
-    std::cout << ev2 << std::endl;
-    std::cout << ev3 << std::endl;
+    eSportsTickets es2("VIP", ev2);
+    eSportsTickets es3("VIP", ev2);
+    eSportsTickets es4("VIP", ev2);
+    eSportsTickets es5("VIP", ev2);
+    eSportsTickets es6("VIP", ev2);
+    eSportsTickets es7("VIP", ev2);
+    eSportsTickets es8("VIP", ev2);
+    eSportsTickets es9("VIP", ev2);
+    eSportsTickets es10("VIP", ev2);
+    eSportsTickets es11("VIP", ev2);
+    eSportsTickets es12("VIP", ev2);    
+    eSportsTickets es13("VIP", ev2);
+    eSportsTickets es14("VIP", ev2);
+
+//    std::cout << es2.getNrLoc() << ' ' << es2.getNrRand() << std::endl;
+    std::cout << *es14.getEveniment() << std::endl;
 }

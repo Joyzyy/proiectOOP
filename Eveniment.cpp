@@ -3,100 +3,44 @@
 int Eveniment::m_iId = 0;
 
 Eveniment::Eveniment() {
-    m_iId++;
-
     m_szNumeEveniment = nullptr;
-    m_szData = nullptr;
-    m_szOra = nullptr;
-    m_szDescriere = nullptr;
-
-    m_iIdEveniment = m_iId;
-    m_iNrLocuriDisponibile = -1;
-    m_iNrLocuriVandute = -1;
-    m_iPretBilet = -1;
-
-    m_oLocatie = new Locatie();
+    m_szDetalii = nullptr;
+    m_iNrLocuriDisponibile = nullptr;
+    m_iIdEveniment = m_iId++;
+    m_flPretBilet = 0;
+    m_oLocatie = nullptr;
 }
 
-Eveniment::Eveniment(const char* szNumeEveniment, const char* szData, const char* szOra, const char* szDescriere, int iNrLocuriDisponibile, int iNrLocuriVandute, int iPretBilet) {
-    m_iId++;
-
+Eveniment::Eveniment(const char* szNumeEveniment, const char* szDetalii, float flPretBilet, const Locatie& oLocatie) {
     Utils::AllocChar(m_szNumeEveniment, szNumeEveniment);
-    Utils::AllocChar(m_szData, szData);
-    Utils::AllocChar(m_szOra, szOra);
-    Utils::AllocChar(m_szDescriere, szDescriere);
+    Utils::AllocChar(m_szDetalii, szDetalii);
+    
+    m_iIdEveniment = m_iId++;
 
-    m_iIdEveniment = m_iId;
-    m_iNrLocuriDisponibile = iNrLocuriDisponibile;
-    m_iNrLocuriVandute = iNrLocuriVandute;
-    m_iPretBilet = iPretBilet;
+    m_iNrLocuriDisponibile = new int*[oLocatie.getNrMaximRanduri()];
+    for (int i = 0; i < oLocatie.getNrMaximRanduri(); ++i)
+        m_iNrLocuriDisponibile[i] = new int[oLocatie.getNrMaximLocuri()];
+    
+    for (int i = 0; i < oLocatie.getNrMaximRanduri(); ++i)
+        for (int j = 0; j < oLocatie.getNrMaximLocuri(); ++j)
+            m_iNrLocuriDisponibile[i][j] = 1;
 
-    m_oLocatie = new Locatie();
-}
-
-Eveniment::Eveniment(const char* szNumeEveniment, const char* szData, const char* szOra, const char* szDescriere, int iNrLocuriDisponibile, int iNrLocuriVandute, int iPretBilet, const Locatie& oLocatie) {
-    m_iId++;
-
-    Utils::AllocChar(m_szNumeEveniment, szNumeEveniment);
-    Utils::AllocChar(m_szData, szData);
-    Utils::AllocChar(m_szOra, szOra);
-    Utils::AllocChar(m_szDescriere, szDescriere);
-
-    m_iIdEveniment = m_iId;
-    m_iNrLocuriDisponibile = iNrLocuriDisponibile;
-    if (iNrLocuriDisponibile < oLocatie.getNrMaximLocuri()) {
-        m_iNrLocuriDisponibile = oLocatie.getNrMaximLocuri();
-    } else {
-        m_iNrLocuriDisponibile = iNrLocuriDisponibile;
-    }
-
-    iNrLocuriDisponibile < oLocatie.getNrMaximLocuri()
-    || iNrLocuriDisponibile < 0 ?
-        m_iNrLocuriDisponibile = oLocatie.getNrMaximLocuri() :
-        m_iNrLocuriDisponibile = iNrLocuriDisponibile;
-
-    m_iNrLocuriVandute = iNrLocuriVandute;
-    m_iPretBilet = iPretBilet;
-
+    m_flPretBilet = flPretBilet;
     m_oLocatie = new Locatie(oLocatie);
-}
-
-Eveniment::Eveniment(const Eveniment& ev) {
-    m_iIdEveniment++;
-
-    Utils::AllocChar(m_szNumeEveniment, ev.m_szNumeEveniment);
-    Utils::AllocChar(m_szData, ev.m_szData);
-    Utils::AllocChar(m_szOra, ev.m_szOra);
-    Utils::AllocChar(m_szDescriere, ev.m_szDescriere);
-
-    m_iIdEveniment = ev.m_iIdEveniment;
-    m_iNrLocuriDisponibile = ev.m_iNrLocuriDisponibile;
-    m_iNrLocuriVandute = ev.m_iNrLocuriVandute;
-    m_iPretBilet = ev.m_iPretBilet;
-
-    m_oLocatie = ev.m_oLocatie;
 }
 
 Eveniment::~Eveniment() {
     Utils::DeallocChar(m_szNumeEveniment);
-    Utils::DeallocChar(m_szData);
-    Utils::DeallocChar(m_szOra);
-    Utils::DeallocChar(m_szDescriere);
+    Utils::DeallocChar(m_szDetalii);
     delete m_oLocatie;
 }
 
 Eveniment& Eveniment::operator=(const Eveniment& ev) {
     if (this != &ev) {
         Utils::ReallocChar(m_szNumeEveniment, ev.m_szNumeEveniment);
-        Utils::ReallocChar(m_szData, ev.m_szData);
-        Utils::ReallocChar(m_szOra, ev.m_szOra);
-        Utils::ReallocChar(m_szDescriere, ev.m_szDescriere);
-
-        m_iNrLocuriDisponibile = ev.m_iNrLocuriDisponibile;
-        m_iNrLocuriVandute = ev.m_iNrLocuriVandute;
-        m_iPretBilet = ev.m_iPretBilet;
-
-        m_oLocatie = ev.m_oLocatie;
+        Utils::ReallocChar(m_szDetalii, ev.m_szDetalii);
+        m_flPretBilet = ev.m_flPretBilet;
+        m_oLocatie = new Locatie(*ev.m_oLocatie);
     } else {
         std::cout << "Self assignment!" << std::endl;
     }
@@ -113,29 +57,76 @@ std::ostream& operator<<(std::ostream& out, const Eveniment& ev) {
         out << "Nume eveniment: " << "N/A" << std::endl
     ));
 
-    (ev.m_szData != nullptr ? (
-        out << "Data: " << ev.m_szData << std::endl
+    (ev.m_szDetalii != nullptr ? (
+        out << "Detalii: " << ev.m_szDetalii << std::endl
     ) : (
-        out << "Data: " << "N/A" << std::endl
+        out << "Detalii: " << "N/A" << std::endl
     ));
 
-    (ev.m_szOra != nullptr ? (
-        out << "Ora: " << ev.m_szOra << std::endl
-    ) : (
-        out << "Ora: " << "N/A" << std::endl
-    ));
+    if (ev.m_oLocatie != nullptr) {
+        out << "Locuri disponibile: \n";
+        for (int i = 0; i < ev.m_oLocatie->getNrMaximRanduri(); ++i, printf("\n"))
+            for (int j = 0; j < ev.m_oLocatie->getNrMaximLocuri(); ++j, printf("\t"))
+                out << (ev.m_iNrLocuriDisponibile[i][j] == 1 ? "D" : "I") << ' ';
 
-    (ev.m_szDescriere != nullptr ? (
-        out << "Descriere: " << ev.m_szDescriere << std::endl
-    ) : (
-        out << "Descriere: " << "N/A" << std::endl
-    ));
-
-    out << "Locuri disponibile: " << ev.m_iNrLocuriDisponibile << std::endl;
-    out << "Locuri vandute: " << ev.m_iNrLocuriVandute << std::endl;
-    out << "Pret bilet: " << ev.m_iPretBilet << std::endl;
-
-    out << *ev.m_oLocatie;
+        out << *ev.m_oLocatie;
+    } else {
+        out << "Locatie: " << "N/A" << std::endl;
+    }
 
     return out;
 }
+
+void Eveniment::setNumeEveniment(const char* szNumeEveniment) {
+    Utils::ReallocChar(m_szNumeEveniment, szNumeEveniment);
+}
+
+void Eveniment::setDetalii(const char* szDetalii) {
+    Utils::ReallocChar(m_szDetalii, szDetalii);
+}
+
+void Eveniment::setOcupaLoc(int iRand, int iLoc) {
+    if (iRand < m_oLocatie->getNrMaximRanduri() && iLoc < m_oLocatie->getNrMaximLocuri())
+        if (m_iNrLocuriDisponibile[iRand][iLoc] == 1)
+            m_iNrLocuriDisponibile[iRand][iLoc] = 0;
+        else
+            std::cout << "Locul este deja ocupat!" << std::endl;
+    else
+        std::cout << "Locul nu exista!" << std::endl;
+}
+
+void Eveniment::setPretBilet(float flPretBilet) {
+    m_flPretBilet = flPretBilet > 0 ? flPretBilet : m_flPretBilet;
+}
+
+void Eveniment::setLocatie(const Locatie& oLocatie) {
+    if (&oLocatie != nullptr) {
+        delete m_oLocatie;
+        m_oLocatie = new Locatie(oLocatie);
+    }
+}
+
+const char* Eveniment::getNumeEveniment() const {
+    return m_szNumeEveniment;
+}
+
+const char* Eveniment::getDetalii() const {
+    return m_szDetalii;
+}
+
+int Eveniment::getIDEveniment() const {
+    return m_iIdEveniment;
+}
+
+int** Eveniment::getNrLocuriDisponibile() const {
+    return m_iNrLocuriDisponibile;
+}
+
+float Eveniment::getPretBilet() const {
+    return m_flPretBilet;
+}
+
+const Locatie& Eveniment::getLocatie() const {
+    return *m_oLocatie;
+}
+

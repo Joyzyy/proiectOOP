@@ -6,16 +6,18 @@
 
 class eSportsTickets {
 public:
-    // eSportsTickets();
-    // ~eSportsTickets();
-private:
-    // static int m_iId;
-    // char* m_szDistributor;
-    // char* m_szCategorie;
-    // int m_iNrRand;
-    // int m_iNrLoc;
-    // int m_iNrEv;
-    // Eveniment m_oEveniment;
-};
+    eSportsTickets();
+    eSportsTickets(const char*, Eveniment&);
+    ~eSportsTickets();
 
-// Path: eSportTickets.cpp
+    int getNrRand() const;
+    int getNrLoc() const;
+    Eveniment* getEveniment() const;
+
+private:
+    static int  m_iId;
+    char*       m_szTipBilet;
+    int         m_iNrRand;
+    int         m_iNrLoc;
+    Eveniment*  m_oEveniment;
+};
