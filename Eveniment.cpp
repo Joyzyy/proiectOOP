@@ -14,7 +14,7 @@ Eveniment::Eveniment() {
 Eveniment::Eveniment(const char* szNumeEveniment, const char* szDetalii, float flPretBilet, const Locatie& oLocatie) {
     Utils::AllocChar(m_szNumeEveniment, szNumeEveniment);
     Utils::AllocChar(m_szDetalii, szDetalii);
-    
+
     m_iIdEveniment = m_iId++;
 
     m_iNrLocuriDisponibile = new int*[oLocatie.getNrMaximRanduri()];
