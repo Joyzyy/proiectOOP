@@ -65,12 +65,20 @@ Tichet& Tichet::operator=(const Tichet& tichet) {
   return *this;
 }
 
+bool Tichet::operator==(const Tichet& tichet) {
+  return m_iId == tichet.m_iId;
+}
+
+bool Tichet::operator!=(const Tichet& tichet) {
+  return m_iId != tichet.m_iId;
+}
+
 std::ostream& operator<<(std::ostream& out, const Tichet& tichet) {
   out << "ID tichet: " << tichet.m_iId << std::endl;
-  out << "Eveniment: " << *tichet.m_oEveniment << std::endl;
+  out << "Eveniment: \n" << *tichet.m_oEveniment << std::endl;
   out << "Tip bilet: " << tichet.m_szTipBilet << std::endl;
-  out << "Numar rand: " << tichet.m_iNrRand << std::endl;
-  out << "Numar loc: " << tichet.m_iNrLoc << std::endl;
+  out << "Numar rand: " << tichet.m_iNrRand + 1 << std::endl;
+  out << "Numar loc: " << tichet.m_iNrLoc + 1 << std::endl;
 
   return out;
 }
@@ -104,24 +112,72 @@ std::istream& operator>>(std::istream& in, Tichet& tichet) {
   std::cout << "------------ " << tichet.m_oEveniment->getNumeEveniment() << " ------------" << std::endl;
   std::cout << "------------ Tichet tip" << tichet.getTipBilet() << " ------------" << std::endl;
   std::cout << "Locuri libere pentru " << tichet.getTipBilet() << std::endl;
+  std::cout << "\t[INFO]: D - Disponibil\n\t[INFO]: I - Indisponibil" << std::endl;
+  std::cout << "\t[CODIFICARE]: [NumarRand, NumarLoc]" << std::endl;
   
+  auto InputLoc = [&](int iRand, int iLoc) -> void {
+    std::cout << "Alege numarul randului dorit: ";
+    in >> iRand;
+    tichet.setRand(iRand - 1);
+
+    std::cout << "Alege numarul locului dorit: ";
+    in >> iLoc;
+    tichet.setLoc(iLoc - 1);
+
+    tichet.m_oEveniment->setOcupaLoc(tichet.getNrRand(), tichet.getNrLoc());
+    std::cout << "Selectia a fost facuta cu succes! Multumim!\n" << std::endl;
+  };
+
   int nrLoc, nrRand;
   if (strcmp(tichet.getTipBilet(), "VIP") == 0) {
-      for (int i = tichet.m_oEveniment->getLocatie().getNrMaximRanduri() - 1; i > tichet.m_oEveniment->getLocatie().getNrMaximRanduri() - 3; --i, printf("\n")) {
-          std::cout << '\t';
-          for (int j = 0; j < tichet.m_oEveniment->getLocatie().getNrMaximLocuri(); ++j) {
-              std::cout << (tichet.m_oEveniment->getNrLocuriDisponibile()[i][j] == 0 ? "I" : "D") << "\t";
-          }
+    for (int i = tichet.m_oEveniment->getLocatie().getNrMaximRanduri() - 2; i < tichet.m_oEveniment->getLocatie().getNrMaximRanduri(); ++i, printf("\n")) {
+      std::cout << '\t';
+      for (int j = 0; j < tichet.m_oEveniment->getLocatie().getNrMaximLocuri(); ++j) {
+        if (tichet.m_oEveniment->getNrLocuriDisponibile()[i][j] == 0) {
+          std::cout << "I\t";
+        } else {
+          std::cout << "D [" << i + 1 << ", " << j + 1 << "]\t";
+        }
       }
-      std::cout << "Alege numarul locului dorit: ";
-      in >> nrLoc;
+    }
+
+    InputLoc(nrRand, nrLoc);
   }
-  
+  else if (strcmp(tichet.getTipBilet(), "NORMAL") == 0) {
+    for (int i = 0; i < tichet.m_oEveniment->getLocatie().getNrMaximRanduri() - 2; ++i, printf("\n")) {
+      printf("\t");
+      for (int j = 0; j < tichet.m_oEveniment->getLocatie().getNrMaximLocuri(); ++j) {
+        if (tichet.m_oEveniment->getNrLocuriDisponibile()[i][j] == 0) {
+          std::cout << "I\t";
+        } else {
+          std::cout << "D [" << i + 1 << ", " << j + 1 << "]\t";
+        }
+      }
+    }
+
+    InputLoc(nrRand, nrLoc);
+  }
+
   return in;
 }
 
+void Tichet::setRand(int iRand) {
+  if (iRand > this->m_oEveniment->getLocatie().getNrMaximRanduri()) {
+    std::cout << "[EROARE]: Nr rand introdus ( " << iRand << ") este mai mare decat nr. maxim de randuri posibile al locatiei ( " << this->m_oEveniment->getLocatie().getNrMaximRanduri() << ") !" << std::endl;
+    return;
+  }
+  m_iNrRand = iRand;
+}
+
+void Tichet::setLoc(int iLoc) {
+  if (iLoc > this->m_oEveniment->getLocatie().getNrMaximLocuri()) {
+    std::cout << "[EROARE]: Nr loc introdus ( " << iLoc << ") este mai mare decat nr. maxim de locuri posibile al locatiei ( " << this->m_oEveniment->getLocatie().getNrMaximLocuri() << ") !" << std::endl;
+  }
+  m_iNrLoc = iLoc;
+}
+
 const char* Tichet::getTipBilet() {
-  return m_szTipBilet;
+  return m_szTipBilet != nullptr ? m_szTipBilet : "N/A";
 }
 
 int Tichet::getId() const {

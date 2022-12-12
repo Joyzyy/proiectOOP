@@ -10,6 +10,12 @@ public:
     ~Locatie();
     
     Locatie& operator=(const Locatie&);
+    // operator++
+    Locatie& operator++();
+    Locatie operator++(int);
+    // operator--
+    Locatie& operator--();
+    Locatie operator--(int);
     friend std::ostream& operator<<(std::ostream&, const Locatie&);
     friend std::istream& operator>>(std::istream&, Locatie&);
 

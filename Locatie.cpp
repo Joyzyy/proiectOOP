@@ -49,6 +49,32 @@ Locatie& Locatie::operator=(const Locatie& locatie) {
     return *this;
 }
 
+Locatie& Locatie::operator++() {
+    m_iNrMaximLocuri++;
+    m_iNrMaximRanduri++;
+    return *this;
+}
+
+Locatie Locatie::operator++(int i) {
+    Locatie locatie = *this;
+    m_iNrMaximLocuri++;
+    m_iNrMaximRanduri++;
+    return locatie;
+}
+
+Locatie& Locatie::operator--() {
+    m_iNrMaximLocuri--;
+    m_iNrMaximRanduri--;
+    return *this;
+}
+
+Locatie Locatie::operator--(int i) {
+    Locatie locatie = *this;
+    m_iNrMaximLocuri--;
+    m_iNrMaximRanduri--;
+    return locatie;
+}
+
 std::ostream& operator<<(std::ostream& out, const Locatie& locatie) {
     out << "ID locatie: " << locatie.m_iIdLocatie << std::endl;
 

@@ -48,6 +48,14 @@ Eveniment& Eveniment::operator=(const Eveniment& ev) {
     return *this;
 }
 
+Eveniment ::operator int() const {
+    return m_iIdEveniment;
+}
+
+Eveniment ::operator float() const {
+    return m_flPretBilet;
+}
+
 std::ostream& operator<<(std::ostream& out, const Eveniment& ev) {
     out << "ID: " << ev.m_iIdEveniment << std::endl;
 

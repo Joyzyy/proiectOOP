@@ -11,6 +11,10 @@ public:
     ~Eveniment();
 
     Eveniment& operator=(const Eveniment&);
+    // cast int
+    explicit operator int() const;
+    // cast float
+    explicit operator float() const;
     friend std::ostream& operator<<(std::ostream&, const Eveniment&);
     friend std::istream& operator>>(std::istream&, Eveniment&);
 
