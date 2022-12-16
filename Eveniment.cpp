@@ -29,6 +29,24 @@ Eveniment::Eveniment(const char* szNumeEveniment, const char* szDetalii, float f
     m_oLocatie = new Locatie(oLocatie);
 }
 
+Eveniment::Eveniment(const Eveniment& ev) {
+    Utils::AllocChar(m_szNumeEveniment, ev.m_szNumeEveniment);
+    Utils::AllocChar(m_szDetalii, ev.m_szDetalii);
+
+    m_iIdEveniment = m_iId++;
+
+    m_iNrLocuriDisponibile = new int*[ev.m_oLocatie->getNrMaximRanduri()];
+    for (int i = 0; i < ev.m_oLocatie->getNrMaximRanduri(); ++i)
+        m_iNrLocuriDisponibile[i] = new int[ev.m_oLocatie->getNrMaximLocuri()];
+    
+    for (int i = 0; i < ev.m_oLocatie->getNrMaximRanduri(); ++i)
+        for (int j = 0; j < ev.m_oLocatie->getNrMaximLocuri(); ++j)
+            m_iNrLocuriDisponibile[i][j] = ev.m_iNrLocuriDisponibile[i][j];
+
+    m_flPretBilet = ev.m_flPretBilet;
+    m_oLocatie = new Locatie(*ev.m_oLocatie);
+}
+
 Eveniment::~Eveniment() {
     Utils::DeallocChar(m_szNumeEveniment);
     Utils::DeallocChar(m_szDetalii);

@@ -30,10 +30,10 @@ public:
     int** getNrLocuriDisponibile() const;
     float getPretBilet() const;
     const Locatie& getLocatie() const;
-    const Eveniment& getCurrentObject() const;
+    //const Eveniment& getCurrentObject() const;
 
-    static int  m_iId;
 private:
+    static int  m_iId;
     char*       m_szNumeEveniment;
     char*       m_szDetalii;
     int         m_iIdEveniment;

@@ -1,33 +1,19 @@
 #include "Locatie.hpp"
 
-int Locatie::m_iId = 0;
-
-Locatie::Locatie() {
-    m_iId++;
-
+Locatie::Locatie() : m_iId((std::uintptr_t)this) {
     m_szNumeLocatie = nullptr;
-
-    m_iIdLocatie = m_iId;
     m_iNrMaximLocuri = -1;
     m_iNrMaximRanduri = -1;
 }
 
-Locatie::Locatie(const char* szNumeLocatie, int iNrMaximLocuri, int iNrMaximRanduri) {
-    m_iId++;
-
+Locatie::Locatie(const char* szNumeLocatie, int iNrMaximLocuri, int iNrMaximRanduri) : m_iId((std::uintptr_t)this) {
     Utils::AllocChar(m_szNumeLocatie, szNumeLocatie);
-
-    m_iIdLocatie = m_iId;
     m_iNrMaximLocuri = iNrMaximLocuri;
     m_iNrMaximRanduri = iNrMaximRanduri;
 }
 
-Locatie::Locatie(const Locatie& locatie) {
-    m_iId++;
-
+Locatie::Locatie(const Locatie& locatie) : m_iId(locatie.m_iId) {
     Utils::AllocChar(m_szNumeLocatie, locatie.m_szNumeLocatie);
-
-    m_iIdLocatie = m_iId;
     m_iNrMaximLocuri = locatie.m_iNrMaximLocuri;
     m_iNrMaximRanduri = locatie.m_iNrMaximRanduri;
 }
@@ -76,7 +62,7 @@ Locatie Locatie::operator--(int i) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Locatie& locatie) {
-    out << "ID locatie: " << locatie.m_iIdLocatie << std::endl;
+    out << "ID locatie: " << locatie.m_iId << std::endl;
 
     (locatie.m_szNumeLocatie != nullptr ? (
         out << "Nume locatie: " << locatie.m_szNumeLocatie << std::endl
@@ -113,6 +99,10 @@ int Locatie::getNrMaximLocuri() const {
 
 int Locatie::getNrMaximRanduri() const {
     return m_iNrMaximRanduri;
+}
+
+int Locatie::getId() const {
+    return m_iId;
 }
 
 void Locatie::setNumeLocatie(const char* szNumeLocatie) {

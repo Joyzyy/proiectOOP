@@ -1,7 +1,7 @@
 #include "Meniu.hpp"
 #include <iostream>
 
-void Meniu::Init(std::list<Locatie> locatii, std::list<Eveniment> evenimente, std::list<Tichet> tichete) {
+void IMeniu::_Init(std::list<Locatie> locatii, std::list<Eveniment> evenimente, std::list<Tichet> tichete) {
   std::cout << "-------- Meniu --------" << std::endl;
   std::cout << "1. Locatie" << std::endl;
   std::cout << "2. Eveniment" << std::endl;
@@ -14,23 +14,24 @@ void Meniu::Init(std::list<Locatie> locatii, std::list<Eveniment> evenimente, st
   switch (optiune) {
   case 1:
     std::cout << "Locatie" << std::endl;
-    Meniu::GLocatie(locatii);
+    IMeniu::_Locatie(locatii);
     break;
   case 2:
     std::cout << "Eveniment" << std::endl;
+    IMeniu::_Eveniment(evenimente);
     break;
   case 3:
     std::cout << "Tichet" << std::endl;
     break;
   default:
     std::cout << "Optiune invalida" << std::endl;
-    Meniu::Init(locatii, evenimente, tichete);
+    IMeniu::_Init(locatii, evenimente, tichete);
     system("cls");
     break;
   }
 }
 
-void Meniu::GLocatie(std::list<Locatie> locatii) {
+void IMeniu::_Locatie(std::list<Locatie> locatii) {
   std::cout << "-------- Locatie --------" << std::endl;
   std::cout << "1. Adauga locatie" << std::endl;
   std::cout << "2. Sterge locatie" << std::endl;
@@ -59,12 +60,12 @@ void Meniu::GLocatie(std::list<Locatie> locatii) {
     break;
   default:
     std::cout << "Optiune invalida" << std::endl;
-    Meniu::GLocatie(locatii);
+    IMeniu::_Locatie(locatii);
     break;
   }
 }
 
-void Meniu::GEveniment(std::list<Eveniment> evenimente) {
+void IMeniu::_Eveniment(std::list<Eveniment> evenimente) {
   std::cout << "-------- Eveniment --------" << std::endl;
   std::cout << "1. Adauga eveniment" << std::endl;
   std::cout << "2. Sterge eveniment" << std::endl;
@@ -92,7 +93,7 @@ void Meniu::GEveniment(std::list<Eveniment> evenimente) {
     break;
   default:
     std::cout << "Optiune invalida" << std::endl;
-    Meniu::GEveniment(evenimente);
+    IMeniu::_Eveniment(evenimente);
     break;
   }
 }

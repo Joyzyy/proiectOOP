@@ -22,18 +22,18 @@ public:
     std::string getNumeLocatie() const;
     int getNrMaximLocuri() const;
     int getNrMaximRanduri() const;
+    int getId() const;
 
     void setNumeLocatie(const char*);
     void setNrMaximLocuri(int);
     void setNrMaximRanduri(int);
 
 private:
-    static int m_iId;
+    const int m_iId;
     char* m_szNumeLocatie;
-    int m_iIdLocatie;
     int m_iNrMaximLocuri;
     int m_iNrMaximRanduri;
 
-    friend class Eveniment;
-    friend class eSportTickets;
+    // friend class Eveniment;
+    // friend class eSportTickets;
 };
