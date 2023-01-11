@@ -1,99 +1,112 @@
 #include "Meniu.hpp"
-#include <iostream>
 
-void IMeniu::_Init(std::list<Locatie> locatii, std::list<Eveniment> evenimente, std::list<Tichet> tichete) {
-  std::cout << "-------- Meniu --------" << std::endl;
-  std::cout << "1. Locatie" << std::endl;
-  std::cout << "2. Eveniment" << std::endl;
-  std::cout << "3. Tichet" << std::endl;
+// Locatie *
+// ILocatie::Adauga(const std::optional<Eveniment> eveniment = std::nullopt) {
+//   if (eveniment.has_value()) {
+//     std::cout << "Nu se poate adauga un eveniment sau un tichet la o
+//     locatie!"
+//               << std::endl;
+//     return nullptr;
+//   }
+//   Locatie *newLocatie = new Locatie();
+//   std::cin >> *newLocatie;
+//   return newLocatie;
+// }
 
-  int optiune;
-  std::cout << "Alegeti o optiune: ";
-  std::cin >> optiune;
+// void ILocatie::Modifica(
+//     Locatie *locatie, const std::optional<Eveniment> eveniment =
+//     std::nullopt) {
+//   if (eveniment.has_value()) {
+//     return;
+//   }
 
-  switch (optiune) {
-  case 1:
-    std::cout << "Locatie" << std::endl;
-    IMeniu::_Locatie(locatii);
-    break;
-  case 2:
-    std::cout << "Eveniment" << std::endl;
-    IMeniu::_Eveniment(evenimente);
-    break;
-  case 3:
-    std::cout << "Tichet" << std::endl;
-    break;
-  default:
-    std::cout << "Optiune invalida" << std::endl;
-    IMeniu::_Init(locatii, evenimente, tichete);
-    system("cls");
-    break;
+//   std::cin >> *locatie;
+// }
+
+// Eveniment *
+// IEveniment::Adauga(const std::optional<Locatie> locatie = std::nullopt) {
+//   Eveniment *newEveniment = new Eveniment(locatie.value());
+//   std::cin >> *newEveniment;
+//   return newEveniment;
+// }
+
+// void IEveniment::Modifica(Eveniment *eveniment,
+//                           const std::optional<Locatie> locatie) {
+//   std::cin >> *eveniment;
+// }
+
+// Tichet *ITichet::Adauga(const std::optional<Eveniment> eveniment) {
+//   Tichet *newTichet = new Tichet((Eveniment &)eveniment.value());
+//   std::cin >> *newTichet;
+//   return newTichet;
+// }
+
+// void ITichet::Modifica(Tichet *tichet,
+//                        const std::optional<Eveniment> eveniment) {
+//   std::cin >> *tichet;
+// }
+
+// void Meniu::Init(std::list<Locatie> &locatii, std::list<Eveniment>
+// &evenimente,
+//                  std::list<Tichet> &tichete) {
+//   ILocatie *iLocatie = new ILocatie();
+//   Locatie *newLocatie = iLocatie->Adauga();
+//   locatii.push_front(*newLocatie);
+
+//   Locatie pLocatie(*newLocatie);
+
+//   IEveniment *iEv = new IEveniment();
+//   Eveniment *nEv = iEv->Adauga(pLocatie);
+
+//   evenimente.push_front(*nEv);
+
+//   ITichet *iTichet = new ITichet();
+//   Tichet *nTch = iTichet->Adauga(*nEv);
+
+//   std::cout << *nTch;
+// }
+
+Locatie *ILocatie::Adauga(const Eveniment *ev = nullptr) {
+  if (ev != nullptr) {
+    return nullptr;
   }
+
+  Locatie *newLocatie = new Locatie();
+  std::cin >> *newLocatie;
+  return newLocatie;
 }
 
-void IMeniu::_Locatie(std::list<Locatie> locatii) {
-  std::cout << "-------- Locatie --------" << std::endl;
-  std::cout << "1. Adauga locatie" << std::endl;
-  std::cout << "2. Sterge locatie" << std::endl;
-  std::cout << "3. Modifica locatie" << std::endl;
-  std::cout << "4. Afiseaza locatii" << std::endl;
+void ILocatie::Modifica(Locatie *locatie) { std::cin >> *locatie; }
 
-  int optiune;
-  std::cout << "Alegeti o optiune: ";
-  std::cin >> optiune;
-
-  switch (optiune) {
-  case 1:
-    std::cout << "Adauga locatie" << std::endl;
-    break;
-  case 2:
-    std::cout << "Elimina locatie" << std::endl;
-    break;
-  case 3:
-    std::cout << "Modifica locatie" << std::endl;
-    break;
-  case 4:
-    std::cout << "Afiseaza locatii" << std::endl;
-    for (const Locatie& locatie : locatii) {
-      std::cout << locatie.getNumeLocatie() << std::endl;
-    }
-    break;
-  default:
-    std::cout << "Optiune invalida" << std::endl;
-    IMeniu::_Locatie(locatii);
-    break;
-  }
+Eveniment *IEveniment::Adauga(const Locatie *locatie) {
+  Eveniment *newEveniment = new Eveniment(*locatie);
+  std::cin >> *newEveniment;
+  return newEveniment;
 }
 
-void IMeniu::_Eveniment(std::list<Eveniment> evenimente) {
-  std::cout << "-------- Eveniment --------" << std::endl;
-  std::cout << "1. Adauga eveniment" << std::endl;
-  std::cout << "2. Sterge eveniment" << std::endl;
-  std::cout << "3. Modifica eveniment" << std::endl;
-  std::cout << "4. Afiseaza evenimente" << std::endl;
+void IEveniment::Modifica(Eveniment *eveniment) { std::cin >> *eveniment; }
 
-  int optiune;
-  std::cout << "Alegeti o optiune: ";
-  std::cin >> optiune;
+Tichet *ITichet::Adauga(const Eveniment *eveniment) {
+  Tichet *newTichet = new Tichet(*eveniment);
+  std::cin >> *newTichet;
+  return newTichet;
+}
 
-  switch (optiune) {
-  case 1:
-    std::cout << "Adauga eveniment" << std::endl;
-    break;
-  case 2:
-    std::cout << "Elimina eveniment" << std::endl;
-    break;
-  case 3:
-    std::cout << "Modifica eveniment" << std::endl;
-    break;
-  case 4:
-    for (const Eveniment& eveniment : evenimente) {
-      std::cout << eveniment.getNumeEveniment() << std::endl;
-    }
-    break;
-  default:
-    std::cout << "Optiune invalida" << std::endl;
-    IMeniu::_Eveniment(evenimente);
-    break;
-  }
+void ITichet::Modifica(Tichet *tichet) { std::cin >> *tichet; }
+
+void Meniu::Init(std::list<Locatie> &locatii, std::list<Eveniment> &evenimente,
+                 std::list<Tichet> &tichete) {
+  ILocatie *iLocatie = new ILocatie();
+  Locatie *newLocatie = iLocatie->Adauga();
+  locatii.push_front(*newLocatie);
+
+  IEveniment *iEveniment = new IEveniment();
+  Eveniment *newEveniment = iEveniment->Adauga(newLocatie);
+  evenimente.push_front(*newEveniment);
+
+  ITichet *iTichet = new ITichet();
+  Tichet *newTichet = iTichet->Adauga(newEveniment);
+  tichete.push_front(*newTichet);
+
+  std::cout << tichete.front();
 }
