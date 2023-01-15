@@ -34,6 +34,7 @@ namespace Meniu {
 void Init(std::list<Locatie> &locatii, std::list<Eveniment> &evenimente,
           std::list<Tichet> &tichete);
 void MeniuLocatie(std::list<Locatie> &locatii);
-void MeniuEveniment(std::list<Eveniment> &evenimente);
-void MeniuTichet(std::list<Tichet> &tichete);
-}
+void MeniuEveniment(std::list<Eveniment> &evenimente,
+                    std::list<Locatie> &locatii);
+void MeniuTichet(std::list<Tichet> &tichete, std::list<Eveniment> &evenimente);
+} // namespace Meniu

@@ -40,7 +40,7 @@ Eveniment::Eveniment(const char *szNumeEveniment, const char *szDetalii,
   m_oLocatie = new Locatie(oLocatie);
 }
 
-Eveniment::Eveniment(const Eveniment &ev) : m_iId((std::uintptr_t)this) {
+Eveniment::Eveniment(const Eveniment &ev) : m_iId(ev.m_iId) {
   Utils::AllocChar(m_szNumeEveniment, ev.m_szNumeEveniment);
   Utils::AllocChar(m_szDetalii, ev.m_szDetalii);
 
