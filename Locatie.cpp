@@ -76,8 +76,12 @@ std::ostream &operator<<(std::ostream &out, const Locatie &locatie) {
 }
 
 std::istream &operator>>(std::istream &in, Locatie &locatie) {
+  std::string buffer;
   std::cout << "Nume locatie: ";
-  Utils::ReadFromStdin(locatie.m_szNumeLocatie, in);
+  std::cin >> buffer;
+
+  locatie.m_szNumeLocatie = new char[buffer.length() + 1];
+  strcpy(locatie.m_szNumeLocatie, buffer.c_str());
 
   std::cout << "Numar maxim locuri: ";
   in >> locatie.m_iNrMaximLocuri;
@@ -86,6 +90,33 @@ std::istream &operator>>(std::istream &in, Locatie &locatie) {
   in >> locatie.m_iNrMaximRanduri;
 
   return in;
+}
+
+void Locatie::SaveToFile(std::ofstream &ofs) {
+  ofs.write((char *)&m_iId, sizeof(m_iId));
+
+  int len = strlen(m_szNumeLocatie);
+  ofs.write((char *)&len, sizeof(len));
+  ofs.write(m_szNumeLocatie, len);
+
+  ofs.write((char *)&m_iNrMaximLocuri, sizeof(m_iNrMaximLocuri));
+  ofs.write((char *)&m_iNrMaximRanduri, sizeof(m_iNrMaximRanduri));
+}
+
+bool Locatie::LoadFromFile(std::ifstream &ifs) {
+  ifs.read((char *)&m_iId, sizeof(m_iId));
+
+  int len;
+  ifs.read((char *)&len, sizeof(len));
+
+  m_szNumeLocatie = new char[len + 1];
+  ifs.read(m_szNumeLocatie, len);
+  m_szNumeLocatie[len] = '\0';
+
+  ifs.read((char *)&m_iNrMaximLocuri, sizeof(m_iNrMaximLocuri));
+  ifs.read((char *)&m_iNrMaximRanduri, sizeof(m_iNrMaximRanduri));
+
+  return ifs.good();
 }
 
 std::string Locatie::getNumeLocatie() const { return m_szNumeLocatie; }

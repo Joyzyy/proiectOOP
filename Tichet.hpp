@@ -6,9 +6,10 @@
 
 class Tichet {
 public:
+  Tichet();
+  Tichet(const Tichet &);
   Tichet(const Eveniment &);
   Tichet(const char *, Eveniment &);
-  Tichet(const Tichet &);
   ~Tichet();
 
   Tichet &operator=(const Tichet &);
@@ -16,6 +17,9 @@ public:
   bool operator!=(const Tichet &);
   friend std::ostream &operator<<(std::ostream &, const Tichet &);
   friend std::istream &operator>>(std::istream &, Tichet &);
+
+  void SaveToFile(std::ofstream &);
+  bool LoadFromFile(std::ifstream &);
 
   void setLoc(int);
   void setRand(int);

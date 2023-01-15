@@ -1,5 +1,11 @@
 #include "Tichet.hpp"
 
+Tichet::Tichet() : m_iId((std::uintptr_t)this) {
+  Utils::AllocChar(m_szTipBilet, "N/A");
+  m_iNrRand = m_iNrLoc = -1;
+  m_oEveniment = nullptr;
+}
+
 Tichet::Tichet(const Eveniment &oEveniment) : m_iId((std::uintptr_t)this) {
   Utils::AllocChar(m_szTipBilet, "N/A");
   m_iNrRand = m_iNrLoc = -1;
@@ -168,6 +174,37 @@ std::istream &operator>>(std::istream &in, Tichet &tichet) {
   }
 
   return in;
+}
+
+void Tichet::SaveToFile(std::ofstream &ofs) {
+  ofs.write((char *)&m_iId, sizeof(m_iId));
+
+  int iTipBiletLength = strlen(m_szTipBilet);
+  ofs.write((char *)&iTipBiletLength, sizeof(iTipBiletLength));
+  ofs.write(m_szTipBilet, iTipBiletLength);
+
+  ofs.write((char *)&m_iNrRand, sizeof(m_iNrRand));
+  ofs.write((char *)&m_iNrLoc, sizeof(m_iNrLoc));
+
+  m_oEveniment->SaveToFile(ofs);
+}
+
+bool Tichet::LoadFromFile(std::ifstream &ifs) {
+  ifs.read((char *)&m_iId, sizeof(m_iId));
+
+  int iLen;
+  ifs.read((char *)&iLen, sizeof(iLen));
+  m_szTipBilet = new char[iLen + 1];
+  ifs.read(m_szTipBilet, iLen);
+  m_szTipBilet[iLen] = '\0';
+
+  ifs.read((char *)&m_iNrRand, sizeof(m_iNrRand));
+  ifs.read((char *)&m_iNrLoc, sizeof(m_iNrLoc));
+
+  m_oEveniment = new Eveniment();
+  m_oEveniment->LoadFromFile(ifs);
+
+  return ifs.good();
 }
 
 void Tichet::setRand(int iRand) {

@@ -20,6 +20,9 @@ public:
   friend std::ostream &operator<<(std::ostream &, const Eveniment &);
   friend std::istream &operator>>(std::istream &, Eveniment &);
 
+  void SaveToFile(std::ofstream &);
+  bool LoadFromFile(std::ifstream &);
+
   void setNumeEveniment(const char *);
   void setDetalii(const char *);
   void setOcupaLoc(int, int);
@@ -35,10 +38,9 @@ public:
   // const Eveniment& getCurrentObject() const;
 
 private:
-  static int m_iId;
+  const int m_iId;
   char *m_szNumeEveniment;
   char *m_szDetalii;
-  int m_iIdEveniment;
   int **m_iNrLocuriDisponibile;
   float m_flPretBilet;
   Locatie *m_oLocatie;

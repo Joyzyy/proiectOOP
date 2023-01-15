@@ -1,20 +1,16 @@
 #include "Eveniment.hpp"
 
-int Eveniment::m_iId = 0;
-
-Eveniment::Eveniment() {
+Eveniment::Eveniment() : m_iId((std::uintptr_t)this) {
   m_szNumeEveniment = nullptr;
   m_szDetalii = nullptr;
   m_iNrLocuriDisponibile = nullptr;
-  m_iIdEveniment = m_iId++;
   m_flPretBilet = 0;
   m_oLocatie = nullptr;
 }
 
-Eveniment::Eveniment(const Locatie &oLocatie) {
+Eveniment::Eveniment(const Locatie &oLocatie) : m_iId((std::uintptr_t)this) {
   Utils::AllocChar(m_szNumeEveniment, "Nume eveniment");
   Utils::AllocChar(m_szDetalii, "Detalii eveniment");
-  m_iIdEveniment = m_iId++;
   m_flPretBilet = 0;
 
   m_iNrLocuriDisponibile = new int *[oLocatie.getNrMaximRanduri()];
@@ -28,11 +24,10 @@ Eveniment::Eveniment(const Locatie &oLocatie) {
 }
 
 Eveniment::Eveniment(const char *szNumeEveniment, const char *szDetalii,
-                     float flPretBilet, const Locatie &oLocatie) {
+                     float flPretBilet, const Locatie &oLocatie)
+    : m_iId((std::uintptr_t)this) {
   Utils::AllocChar(m_szNumeEveniment, szNumeEveniment);
   Utils::AllocChar(m_szDetalii, szDetalii);
-
-  m_iIdEveniment = m_iId++;
 
   m_iNrLocuriDisponibile = new int *[oLocatie.getNrMaximRanduri()];
   for (int i = 0; i < oLocatie.getNrMaximRanduri(); ++i)
@@ -45,11 +40,9 @@ Eveniment::Eveniment(const char *szNumeEveniment, const char *szDetalii,
   m_oLocatie = new Locatie(oLocatie);
 }
 
-Eveniment::Eveniment(const Eveniment &ev) {
+Eveniment::Eveniment(const Eveniment &ev) : m_iId((std::uintptr_t)this) {
   Utils::AllocChar(m_szNumeEveniment, ev.m_szNumeEveniment);
   Utils::AllocChar(m_szDetalii, ev.m_szDetalii);
-
-  m_iIdEveniment = m_iId++;
 
   m_iNrLocuriDisponibile = new int *[ev.m_oLocatie->getNrMaximRanduri()];
   for (int i = 0; i < ev.m_oLocatie->getNrMaximRanduri(); ++i)
@@ -82,12 +75,12 @@ Eveniment &Eveniment::operator=(const Eveniment &ev) {
   return *this;
 }
 
-Eveniment ::operator int() const { return m_iIdEveniment; }
+Eveniment ::operator int() const { return m_iId; }
 
 Eveniment ::operator float() const { return m_flPretBilet; }
 
 std::ostream &operator<<(std::ostream &out, const Eveniment &ev) {
-  out << "ID: " << ev.m_iIdEveniment << std::endl;
+  out << "ID: " << ev.m_iId << std::endl;
 
   (ev.m_szNumeEveniment != nullptr
        ? (out << "Nume eveniment: " << ev.m_szNumeEveniment << std::endl)
@@ -134,6 +127,57 @@ std::istream &operator>>(std::istream &in, Eveniment &ev) {
   return in;
 }
 
+void Eveniment::SaveToFile(std::ofstream &ofs) {
+  ofs.write((char *)&m_iId, sizeof(m_iId));
+
+  int iNumeEvenimentLength = strlen(m_szNumeEveniment);
+  ofs.write((char *)&iNumeEvenimentLength, sizeof(iNumeEvenimentLength));
+  ofs.write(m_szNumeEveniment, iNumeEvenimentLength);
+
+  int iDetaliiLength = strlen(m_szDetalii);
+  ofs.write((char *)&iDetaliiLength, sizeof(iDetaliiLength));
+  ofs.write(m_szDetalii, iDetaliiLength);
+
+  m_oLocatie->SaveToFile(ofs);
+
+  for (int i = 0; i < m_oLocatie->getNrMaximRanduri(); ++i)
+    for (int j = 0; j < m_oLocatie->getNrMaximLocuri(); ++j)
+      ofs.write((char *)&m_iNrLocuriDisponibile[i][j], sizeof(int));
+
+  ofs.write((char *)&m_flPretBilet, sizeof(m_flPretBilet));
+}
+
+bool Eveniment::LoadFromFile(std::ifstream &ifs) {
+  ifs.read((char *)&m_iId, sizeof(m_iId));
+
+  int iNumeEvenimentLength;
+  ifs.read((char *)&iNumeEvenimentLength, sizeof(iNumeEvenimentLength));
+  m_szNumeEveniment = new char[iNumeEvenimentLength + 1];
+  ifs.read(m_szNumeEveniment, iNumeEvenimentLength);
+  m_szNumeEveniment[iNumeEvenimentLength] = '\0';
+
+  int iDetaliiLength;
+  ifs.read((char *)&iDetaliiLength, sizeof(iDetaliiLength));
+  m_szDetalii = new char[iDetaliiLength + 1];
+  ifs.read(m_szDetalii, iDetaliiLength);
+  m_szDetalii[iDetaliiLength] = '\0';
+
+  m_oLocatie = new Locatie();
+  m_oLocatie->LoadFromFile(ifs);
+
+  ifs.read((char *)&m_flPretBilet, sizeof(m_flPretBilet));
+
+  m_iNrLocuriDisponibile = new int *[m_oLocatie->getNrMaximRanduri()];
+  for (int i = 0; i < m_oLocatie->getNrMaximRanduri(); ++i)
+    m_iNrLocuriDisponibile[i] = new int[m_oLocatie->getNrMaximLocuri()];
+
+  for (int i = 0; i < m_oLocatie->getNrMaximRanduri(); ++i)
+    for (int j = 0; j < m_oLocatie->getNrMaximLocuri(); ++j)
+      ifs.read((char *)&m_iNrLocuriDisponibile[i][j], sizeof(int));
+
+  return ifs.good();
+}
+
 void Eveniment::setNumeEveniment(const char *szNumeEveniment) {
   Utils::ReallocChar(m_szNumeEveniment, szNumeEveniment);
 }
@@ -168,7 +212,7 @@ const char *Eveniment::getNumeEveniment() const { return m_szNumeEveniment; }
 
 const char *Eveniment::getDetalii() const { return m_szDetalii; }
 
-int Eveniment::getIDEveniment() const { return m_iIdEveniment; }
+int Eveniment::getIDEveniment() const { return m_iId; }
 
 int **Eveniment::getNrLocuriDisponibile() const {
   return m_iNrLocuriDisponibile;

@@ -1,42 +1,10 @@
 #pragma once
 
 #include <list>
-#include <optional>
 
 #include "Eveniment.hpp"
 #include "Locatie.hpp"
 #include "Tichet.hpp"
-
-// template <class T, class U, class V> class IMeniu {
-// public:
-//   virtual T *Adauga(const std::optional<U>, const std::optional<V>) = 0;
-//   virtual void Modifica(T *, const std::optional<U>,
-//                         const std::optional<V>) = 0;
-// };
-
-// class ILocatie : public IMeniu<Locatie, Eveniment, Tichet> {
-// public:
-//   Locatie *Adauga(const std::optional<Eveniment>,
-//                   const std::optional<Tichet>) override;
-//   void Modifica(Locatie *, const std::optional<Eveniment>,
-//                 const std::optional<Tichet>) override;
-// };
-
-// class IEveniment : public IMeniu<Eveniment, Locatie, Tichet> {
-// public:
-//   Eveniment *Adauga(const std::optional<Locatie>,
-//                     const std::optional<Tichet>) override;
-//   void Modifica(Eveniment *, const std::optional<Locatie>,
-//                 const std::optional<Tichet>) override;
-// };
-
-// class ITichet : public IMeniu<Tichet, Eveniment, Locatie> {
-// public:
-//   Tichet *Adauga(const std::optional<Eveniment> eveniment,
-//                  const std::optional<Locatie> locatie) override;
-//   void Modifica(Tichet *, const std::optional<Eveniment>,
-//                 const std::optional<Locatie> locatie) override;
-// };
 
 template <class T, class U> class IMeniu {
 public:
@@ -65,4 +33,7 @@ public:
 namespace Meniu {
 void Init(std::list<Locatie> &locatii, std::list<Eveniment> &evenimente,
           std::list<Tichet> &tichete);
+void MeniuLocatie(std::list<Locatie> &locatii);
+void MeniuEveniment(std::list<Eveniment> &evenimente);
+void MeniuTichet(std::list<Tichet> &tichete);
 }

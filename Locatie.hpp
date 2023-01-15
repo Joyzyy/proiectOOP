@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include <iostream>
 
 #include "Utils.hpp"
@@ -19,6 +20,9 @@ public:
   Locatie operator--(int);
   friend std::ostream &operator<<(std::ostream &, const Locatie &);
   friend std::istream &operator>>(std::istream &, Locatie &);
+
+  void SaveToFile(std::ofstream &);
+  bool LoadFromFile(std::ifstream &);
 
   std::string getNumeLocatie() const;
   int getNrMaximLocuri() const;
