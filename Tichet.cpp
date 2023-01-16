@@ -1,4 +1,5 @@
 #include "Tichet.hpp"
+#include <Python.h>
 
 Tichet::Tichet() : m_iId((std::uintptr_t)this) {
   Utils::AllocChar(m_szTipBilet, "N/A");
@@ -174,6 +175,56 @@ std::istream &operator>>(std::istream &in, Tichet &tichet) {
   }
 
   return in;
+}
+
+bool Tichet::SaveToPDF() {
+  PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pResult;
+
+  Py_Initialize();
+
+  PyObject *sysPath = PySys_GetObject((char *)"path");
+  PyList_Append(sysPath, PyUnicode_FromString((char *)"."));
+
+  pName = PyUnicode_FromString((char *)"createPdf");
+  pModule = PyImport_Import(pName);
+
+  if (pModule == NULL) {
+    PyErr_Print();
+    printf("Failed to load");
+    return false;
+  }
+
+  pDict = PyModule_GetDict(pModule);
+  pFunc = PyDict_GetItemString(pDict, (char *)"someFunction");
+
+  if (PyCallable_Check(pFunc)) {
+    std::string data = std::to_string(m_iId);
+    data += ";";
+    data += m_szTipBilet;
+    data += ";";
+    data += std::to_string(m_iNrRand);
+    data += ";";
+    data += std::to_string(m_iNrLoc);
+    data += ";";
+    data += m_oEveniment->getNumeEveniment();
+    data += ";";
+    data += m_oEveniment->getLocatie().getNumeLocatie();
+    pValue = Py_BuildValue("(z)", data.c_str());
+    PyErr_Print();
+    pResult = PyObject_CallObject(pFunc, pValue);
+    PyErr_Print();
+  } else {
+    PyErr_Print();
+    return false;
+  }
+
+  Py_DECREF(pValue);
+  Py_DECREF(pModule);
+  Py_DECREF(pName);
+
+  Py_Finalize();
+
+  return true;
 }
 
 void Tichet::SaveToFile(std::ofstream &ofs) {

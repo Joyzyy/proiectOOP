@@ -1,3 +1,6 @@
-a.out
+TicketApp
 .vscode
 old
+build
+create_pdf/node_modules
+__pycache__

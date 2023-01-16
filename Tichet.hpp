@@ -18,6 +18,8 @@ public:
   friend std::ostream &operator<<(std::ostream &, const Tichet &);
   friend std::istream &operator>>(std::istream &, Tichet &);
 
+  bool SaveToPDF();
+
   void SaveToFile(std::ofstream &);
   bool LoadFromFile(std::ifstream &);
 

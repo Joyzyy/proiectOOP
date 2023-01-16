@@ -194,11 +194,9 @@ void Meniu::MeniuTichet(std::list<Tichet> &tichete,
 #endif
 
   std::cout << "------ Meniu Tichet -----\n";
-  std::cout << "1. Adauga\n";
-  std::cout << "2. Modifica\n";
-  std::cout << "3. Afiseaza\n";
-  std::cout << "4. Sterge\n";
-  std::cout << "5. Exit\n";
+  std::cout << "1. Cumpara\n";
+  std::cout << "2. Afiseaza\n";
+  std::cout << "3. Exit\n";
 
   int optiune;
   std::cin >> optiune;
@@ -207,26 +205,28 @@ void Meniu::MeniuTichet(std::list<Tichet> &tichete,
 
   switch (optiune) {
   case 1:
-    std::cout
-        << "Introduceti id-ul evenimentului pe care doriti sa il adaugati "
-           "aferenta tichetului: ";
+    std::cout << "Introduceti id-ul evenimentului pentru care doriti sa "
+                 "cumparati bilet: ";
     int iEvenimentID;
     std::cin >> iEvenimentID;
     for (auto &pEveniment : evenimente) {
       if (pEveniment.getIDEveniment() == iEvenimentID) {
-        std::cout << "id eveniment gasit." << std::endl;
+        std::cout << "Eveniment gasit." << std::endl;
         tichete.push_back(*tichet.Adauga(&pEveniment));
         break;
-      } else {
-        std::cout << "id eveniment nu a fost gasit." << std::endl;
-        std::cout << "id evenimente: " << std::endl;
-        std::cout << pEveniment.getIDEveniment() << std::endl;
       }
     }
 
-    std::cout << "Acum, tichetele sunt: " << std::endl;
-    for (auto &pTichet : tichete) {
-      std::cout << pTichet << std::endl;
+    std::cout << "Ati cumparat urmatorul tichet: " << std::endl;
+    std::cout << tichete.back() << std::endl;
+
+    std::cout << "Doriti sa fie salvat sub forma de pdf? (y/n): ";
+    char cOptiune;
+    std::cin >> cOptiune;
+
+    if (cOptiune == 'y') {
+      tichete.back().SaveToPDF();
+      std::cout << "Tichetul a fost salvat sub forma de pdf." << std::endl;
     }
 
     std::cout << "Apasati orice tasta pentru a reveni la meniul principal...";
@@ -235,33 +235,11 @@ void Meniu::MeniuTichet(std::list<Tichet> &tichete,
 
     break;
   case 2:
-    std::cout
-        << "Introduceti id-ul tichetului pe care doriti sa il modificati: ";
-    int id;
-    std::cin >> id;
-    for (auto &pTichet : tichete) {
-      if (pTichet.getId() == id) {
-        tichet.Modifica(&pTichet);
-        break;
-      }
-    }
-    break;
-  case 3:
     for (auto &pTichet : tichete) {
       std::cout << pTichet << std::endl;
     }
     break;
-  case 4:
-    std::cout << "Introduceti id-ul tichetului pe care doriti sa il stergeti: ";
-    std::cin >> id;
-    for (auto it = tichete.begin(); it != tichete.end(); it++) {
-      if (it->getId() == id) {
-        tichete.erase(it);
-        break;
-      }
-    }
-    break;
-  case 5:
+  case 3:
     exit(0);
     break;
   }
