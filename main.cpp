@@ -95,6 +95,11 @@ int main(int argc, char *argv[]) {
         tichet.SaveToFile(foutTichete);
       }
       foutTichete.close();
+      std::ofstream foutEvenimenteTichete("eveniment.txt", std::ios::binary);
+      for (auto eveniment : evenimente) {
+        eveniment.SaveToFile(foutEvenimenteTichete);
+      }
+      foutEvenimenteTichete.close();
     }
     std::cout << "Modificari facute cu succes." << std::endl;
   } else {
