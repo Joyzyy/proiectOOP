@@ -198,13 +198,13 @@ bool Tichet::SaveToPDF() {
   pFunc = PyDict_GetItemString(pDict, (char *)"someFunction");
 
   if (PyCallable_Check(pFunc)) {
-    std::string data = std::to_string(m_iId);
+    std::string data = std::to_string(m_iId + 1);
     data += ";";
     data += m_szTipBilet;
     data += ";";
-    data += std::to_string(m_iNrRand);
+    data += std::to_string(m_iNrRand + 1);
     data += ";";
-    data += std::to_string(m_iNrLoc);
+    data += std::to_string(m_iNrLoc + 1);
     data += ";";
     data += m_oEveniment->getNumeEveniment();
     data += ";";

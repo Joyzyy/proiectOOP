@@ -9,8 +9,6 @@
 #include "Meniu.hpp"
 #include "Tichet.hpp"
 
-#include <Python.h>
-
 int main(int argc, char *argv[]) {
   std::list<Locatie> locatii;
   std::list<Eveniment> evenimente;
